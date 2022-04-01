@@ -26,6 +26,7 @@ public class ConnectionManager : Object {
 
     private NetworkMonitor? network_monitor;
     private Login1Manager? login1;
+    private Login1Session? login1_session;
     private ModuleManager module_manager;
     public string? log_options;
 
@@ -109,6 +110,20 @@ public class ConnectionManager : Object {
             login1 = get_login1.end(res);
             if (login1 != null) {
                 login1.PrepareForSleep.connect(on_prepare_for_sleep);
+            }
+        });
+
+        get_login1_session.begin((_, res) => {
+            login1_session = get_login1_session.end(res);
+            if (login1_session != null) {
+                stdout.printf("Locked hint initialized with: %b\n", login1_session.locked_hint);
+                login1_session.lock.connect((s) => {
+                    stdout.printf("LOCK SIGNAL\n");
+                });
+                login1_session.notify.connect((s, p) => {
+                    stdout.printf("Property '%s' has changed!\n", p.name);
+                });
+                login1_session.lock();
             }
         });
 
