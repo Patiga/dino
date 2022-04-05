@@ -28,10 +28,10 @@ public class PresenceManager : StreamInteractionModule, Object {
         stream_interactor.connection_manager.session_locked_hint.connect((locked) => {
             if (locked) {
                 stdout.printf("Changing presence to unavailable\n");
-                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.TYPE_UNAVAILABLE);
+                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.SHOW_AWAY);
             } else {
                 stdout.printf("Changing presence to available\n");
-                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.TYPE_AVAILABLE);
+                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.SHOW_ONLINE);
             }
         });
     }
