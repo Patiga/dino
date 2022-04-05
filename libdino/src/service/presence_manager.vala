@@ -25,6 +25,18 @@ public class PresenceManager : StreamInteractionModule, Object {
     private PresenceManager(StreamInteractor stream_interactor) {
         this.stream_interactor = stream_interactor;
         stream_interactor.account_added.connect(on_account_added);
+        stream_interactor.connection_manager.session_locked_hint.connect((locked) => {
+            Xmpp.Presence.Stanza presence = new Xmpp.Presence.Stanza();
+            if (locked) {
+                presence.type_ = Xmpp.Presence.Stanza.TYPE_UNAVAILABLE;
+            } else {
+                presence.type_ = Xmpp.Presence.Stanza.TYPE_AVAILABLE;
+            }
+
+            foreach (Account account in stream_interactor.connection_manager.connections.keys) {
+                make_offline(account);
+            }
+        });
     }
 
     public string? get_last_show(Jid jid, Account account) {

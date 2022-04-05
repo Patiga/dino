@@ -11,6 +11,7 @@ public class ConnectionManager : Object {
     public signal void stream_attached_modules(Account account, XmppStream stream);
     public signal void connection_state_changed(Account account, ConnectionState state);
     public signal void connection_error(Account account, ConnectionError error);
+    public signal void session_locked_hint(bool locked);
 
     public enum ConnectionState {
         CONNECTED,
@@ -110,22 +111,23 @@ public class ConnectionManager : Object {
             login1 = get_login1.end(res);
             if (login1 != null) {
                 login1.PrepareForSleep.connect(on_prepare_for_sleep);
+
+                string session = login1.get_session("auto");
+
+                get_login1_session.begin(session, (_, res) => {
+                    login1_session = get_login1_session.end(res);
+                    if (login1_session != null) {
+                        ((DBusProxy) login1_session).g_properties_changed.connect((self, changed, invalidated) => {
+                            foreach (var v in changed) { if (v.get_child_value(0).get_string() == "LockedHint")
+                                session_locked_hint(login1_session.locked_hint);
+                            }
+                        });
+                    }
+                });
             }
         });
 
-        get_login1_session.begin((_, res) => {
-            login1_session = get_login1_session.end(res);
-            if (login1_session != null) {
-                stdout.printf("Locked hint initialized with: %b\n", login1_session.locked_hint);
-                login1_session.lock.connect((s) => {
-                    stdout.printf("LOCK SIGNAL\n");
-                });
-                login1_session.notify.connect((s, p) => {
-                    stdout.printf("Property '%s' has changed!\n", p.name);
-                });
-                login1_session.lock();
-            }
-        });
+
 
         Timeout.add_seconds(60, () => {
             foreach (Account account in connections.keys) {
