@@ -80,7 +80,7 @@ public class ConnectionManager : Object {
 
         public void change_show(string show) {
             Xmpp.Presence.Stanza presence = new Xmpp.Presence.Stanza();
-            presence.show = show;
+            presence.type_ = show;
             if (stream != null) {
                 stream.get_module(Presence.Module.IDENTITY).send_presence(stream, presence);
             }
