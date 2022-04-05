@@ -26,15 +26,12 @@ public class PresenceManager : StreamInteractionModule, Object {
         this.stream_interactor = stream_interactor;
         stream_interactor.account_added.connect(on_account_added);
         stream_interactor.connection_manager.session_locked_hint.connect((locked) => {
-            Xmpp.Presence.Stanza presence = new Xmpp.Presence.Stanza();
             if (locked) {
-                presence.type_ = Xmpp.Presence.Stanza.TYPE_UNAVAILABLE;
+                stdout.printf("Changing presence to unavailable\n");
+                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.SHOW_AWAY);
             } else {
-                presence.type_ = Xmpp.Presence.Stanza.TYPE_AVAILABLE;
-            }
-
-            foreach (Account account in stream_interactor.connection_manager.connections.keys) {
-                make_offline(account);
+                stdout.printf("Changing presence to available\n");
+                stream_interactor.connection_manager.change_show_all(Xmpp.Presence.Stanza.SHOW_ONLINE);
             }
         });
     }

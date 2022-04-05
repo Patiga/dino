@@ -78,6 +78,14 @@ public class ConnectionManager : Object {
             uuid = Xmpp.random_uuid();
         }
 
+        public void change_show(string show) {
+            Xmpp.Presence.Stanza presence = new Xmpp.Presence.Stanza();
+            presence.show = show;
+            if (stream != null) {
+                stream.get_module(Presence.Module.IDENTITY).send_presence(stream, presence);
+            }
+        }
+
         public void make_offline() {
             Xmpp.Presence.Stanza presence = new Xmpp.Presence.Stanza();
             presence.type_ = Xmpp.Presence.Stanza.TYPE_UNAVAILABLE;
@@ -186,6 +194,16 @@ public class ConnectionManager : Object {
     private void make_offline(Account account) {
         connections[account].make_offline();
         change_connection_state(account, ConnectionState.DISCONNECTED);
+    }
+
+    public void change_show_all(string show) {
+        foreach (Account account in connections.keys) {
+            change_show(account, show);
+        }
+    }
+
+    public void change_show(Account account, string show) {
+        connections[account].change_show(show);
     }
 
     public async void disconnect_account(Account account) {
