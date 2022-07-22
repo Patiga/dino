@@ -79,6 +79,7 @@ public class FileManager : StreamInteractionModule, Object {
         file_transfer.local_time = new DateTime.now_utc();
         file_transfer.provider = SFS_PROVIDER_ID;
         file_transfer.with_metadata_element(sfs_element.metadata);
+        file_transfer.sfs_sources = sfs_element.sources;
         // TODO: is this the proper info? in the http-plugin this is the id of the Entity.Message
         file_transfer.info = message.id.to_string();
 

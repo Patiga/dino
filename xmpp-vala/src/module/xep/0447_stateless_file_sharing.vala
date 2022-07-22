@@ -107,7 +107,8 @@ namespace Xmpp.Xep.StatelessFileSharing {
                 return;
             }
             // TODO: add message flag
-            printerr("signalling successfully parsed sfs message\n");
+            printerr("signalling successfully parsed sfs message, parsed element:\n");
+            printerr("%s\n", sfs_element.to_stanza_node().to_ansi_string(true));
             received_sfs(message.from, message.to, sfs_element, message);
         }
 
