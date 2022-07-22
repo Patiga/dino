@@ -69,7 +69,7 @@ namespace Xmpp.Xep.StatelessFileSharing {
         public StanzaNode to_stanza_node() {
             StanzaNode node = new StanzaNode.build(STANZA_NAME, NS_URI).add_self_xmlns();
             node.put_node(this.metadata.to_stanza_node());
-            StanzaNode sources_node = new StanzaNode.build("sources");
+            StanzaNode sources_node = new StanzaNode.build("sources", NS_URI);
             Gee.List<StanzaNode> sources = new Gee.ArrayList<StanzaNode>();
             foreach (HttpSource source in this.sources) {
                 sources.add(source.to_stanza_node());
