@@ -47,6 +47,7 @@ public class FileManager : StreamInteractionModule, Object {
 
     private FileProvider? select_file_provider(FileTransfer file_transfer) {
         bool http_usable = !(file_transfer.provider == SFS_PROVIDER_ID);
+        printerr("https usable: %b\n", http_usable);
 
         foreach (FileProvider file_provider in this.file_providers) {
             if (file_transfer.provider == file_provider.get_id()) {
@@ -56,6 +57,7 @@ public class FileManager : StreamInteractionModule, Object {
                 return file_provider;
             }
         }
+        printerr("returned null\n");
         return null;
     }
 
