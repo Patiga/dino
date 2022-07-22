@@ -9,10 +9,10 @@ namespace Xmpp.Xep.StatelessFileSharing {
 
         public const string HTTP_NS_URI = "http://jabber.org/protocol/url-data";
         public const string HTTP_STANZA_NAME = "url-data";
-        public const string HTTP_URL_ATTRIBUTE = "url-data";
+        public const string HTTP_URL_ATTRIBUTE = "target";
 
         public StanzaNode to_stanza_node() {
-            StanzaNode node = new StanzaNode.build(HTTP_STANZA_NAME, HTTP_NS_URI);
+            StanzaNode node = new StanzaNode.build(HTTP_STANZA_NAME, HTTP_NS_URI).add_self_xmlns();
             node.put_attribute(HTTP_URL_ATTRIBUTE, this.url);
             return node;
         }
@@ -67,7 +67,7 @@ namespace Xmpp.Xep.StatelessFileSharing {
         }
 
         public StanzaNode to_stanza_node() {
-            StanzaNode node = new StanzaNode.build(STANZA_NAME, NS_URI);
+            StanzaNode node = new StanzaNode.build(STANZA_NAME, NS_URI).add_self_xmlns();
             node.put_node(this.metadata.to_stanza_node());
             StanzaNode sources_node = new StanzaNode.build("sources");
             Gee.List<StanzaNode> sources = new Gee.ArrayList<StanzaNode>();
