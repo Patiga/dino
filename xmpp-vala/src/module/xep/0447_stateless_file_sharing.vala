@@ -95,18 +95,18 @@ namespace Xmpp.Xep.StatelessFileSharing {
         }
 
         private void on_received_message(XmppStream stream, MessageStanza message) {
-            printerr("on_received_message called (stateless file sharing)");
+            printerr("on_received_message called (stateless file sharing)\n");
             StanzaNode? sfs_node = message.stanza.get_subnode(STANZA_NAME, NS_URI);
             if (sfs_node == null) {
                 return;
             }
-            printerr("identified stateless file sharing message");
+            printerr("identified stateless file sharing message\n");
             SfsElement? sfs_element = SfsElement.from_stanza_node(sfs_node);
             if (sfs_element == null) {
                 return;
             }
             // TODO: add message flag
-            printerr("signalling successfully parsed sfs message");
+            printerr("signalling successfully parsed sfs message\n");
             received_sfs(message.from, message.to, sfs_element, message);
         }
 
