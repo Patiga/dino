@@ -92,7 +92,7 @@ namespace Xmpp.Xep.StatelessFileSharing {
             MessageProcessingHints.set_message_hint(sfs_message, MessageProcessingHints.HINT_STORE);
             sfs_message.stanza.put_node(sfs_node);
             stream.get_module(MessageModule.IDENTITY).send_message.begin(stream, sfs_message);
-            printerr("sfs module: sent message");
+            printerr("sfs module: sent message\n");
         }
 
         private void on_received_message(XmppStream stream, MessageStanza message) {

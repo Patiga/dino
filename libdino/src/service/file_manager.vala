@@ -60,7 +60,7 @@ public class FileManager : StreamInteractionModule, Object {
     }
 
     private async void on_receive_sfs(Jid from, Jid to, Xep.StatelessFileSharing.SfsElement sfs_element, MessageStanza message, Account account) {
-        printerr("on_receive_sfs called in file_manager");
+        printerr("on_receive_sfs called in file_manager\n");
         FileTransfer file_transfer = new FileTransfer();
         Conversation? conversation = stream_interactor.get_module(ConversationManager.IDENTITY).approx_conversation_for_stanza(from, to, account, message.type_);
         file_transfer.account = conversation.account;
