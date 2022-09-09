@@ -91,7 +91,7 @@ public class FileTransfer : Object {
     public int height { get; set; default=-1; }
     public int64 length { get; set; default=-1; }
     public Xep.CryptographicHashes.Hashes hashes { get; set; default=new Xep.CryptographicHashes.Hashes();}
-    public Gee.List<SerializedSfsSource> sfs_sources { get; set; default=new Gee.ArrayList<SerializedSfsSource>(); }
+    public ListStore sfs_sources { get; set; default=new ListStore(typeof(SerializedSfsSource)); }
     public Gee.List<Xep.JingleContentThumbnails.Thumbnail> thumbnails = new Gee.ArrayList<Xep.JingleContentThumbnails.Thumbnail>();
 
     private Database? db;
@@ -146,11 +146,11 @@ public class FileTransfer : Object {
             thumbnails.add(thumbnail);
         }
 
-        foreach(var source_row in db.sfs_sources.select().with(db.sfs_sources.id, "=", id)) {
+        foreach(Qlite.Row source_row in db.sfs_sources.select().with(db.sfs_sources.id, "=", id)) {
             SerializedSfsSource source = new SerializedSfsSource();
             source.type = source_row[db.sfs_sources.type];
             source.data = source_row[db.sfs_sources.data];
-            sfs_sources.add(source);
+            sfs_sources.append(source as Object);
         }
 
         notify.connect(on_update);
@@ -201,7 +201,8 @@ public class FileTransfer : Object {
                     .value(db.file_thumbnails.height, thumbnail.height)
                     .perform();
         }
-        foreach (SerializedSfsSource source in sfs_sources) {
+        foreach (Object source_object in sfs_sources) {
+            SerializedSfsSource source = source_object as SerializedSfsSource;
             db.sfs_sources.insert()
                     .value(db.sfs_sources.id, id)
                     .value(db.sfs_sources.type, source.type)
@@ -258,6 +259,8 @@ public class FileTransfer : Object {
         }
         update_builder.perform();
     }
+
+
 
     public Xep.FileMetadataElement.FileMetadata to_metadata_element() {
         Xep.FileMetadataElement.FileMetadata metadata = new Xep.FileMetadataElement.FileMetadata();
