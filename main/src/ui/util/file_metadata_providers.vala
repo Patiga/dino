@@ -15,7 +15,13 @@ public class AudioVideoFileMetadataProvider: Dino.FileMetadataProvider, Object {
     }
 
     public async void fill_metadata(File file, Xep.FileMetadataElement.FileMetadata metadata) {
-        MediaFile media = MediaFile.for_input_stream(yield file.read_async());
+        MediaFile media = MediaFile.for_file(file);
+        media.notify["prepared"].connect((object, pspec) => {
+            Idle.add(fill_metadata.callback);
+        });
+        printerr("Before the yield\n");
+        yield;
+        printerr("After the yield\n");
         metadata.length = media.duration;
     }
 }
